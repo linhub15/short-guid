@@ -1,21 +1,18 @@
-// const uuid = crypto.randomUUID();
-const uuid = '27b40832-9344-4110-ace8-1e6bf277219f'; // https://www.fileformat.info/tool/guid-base64.htm J7QIMpNEQRCs6AAAHmvydw
-console.log({uuid});
+export function encode(guid?: string) {
+  if (!guid) guid = crypto.randomUUID();
+  const byteArray = toByteArray(guid);
 
-const byteArray = tryParseGuid(uuid);
-// console.log({byteArray});
+  const intermediaryForBtoa = byteArray.reduce(
+    (prev, cur) => prev + String.fromCharCode(cur),
+    "",
+  );
+  const b64 = btoa(intermediaryForBtoa);
+  const suid = toBase64Url(b64);
+  return suid;
+}
 
-const intermediaryForBtoa = byteArray.reduce((prev, cur) => prev + String.fromCharCode(cur), '');
-// console.log({intermediaryForBtoa});
-
-const b64 = btoa(intermediaryForBtoa);
-// console.log(b64);
-
-const suid = shortGuidEncode(b64);
-console.log(suid);
-
-function tryParseGuid(guid: string) {
-  const parts = guid.split('-');
+function toByteArray(guid: string) {
+  const parts = guid.split("-");
   const a = toInt32(parts[0]);
   const b = toShort(parts[1]);
   const c = toShort(parts[2]);
@@ -24,7 +21,7 @@ function tryParseGuid(guid: string) {
   const d = toByte(BigInt(temp) >> 8n);
   const e = toByte(BigInt(temp));
 
-  const templ = BigInt('0x' + parts[4]);
+  const templ = BigInt("0x" + parts[4]);
 
   const templLeft = templ >> 32n;
 
@@ -80,9 +77,19 @@ function toByte(int32: bigint): DataView {
   return view;
 }
 
-function shortGuidEncode(b64: string): string {
-  b64 = b64.replace('/', '_');
-  b64 = b64.replace('+', "-");
-  b64 = b64.substring(0,22);
+function toBase64Url(b64: string): string {
+  b64 = b64.replace("/", "_");
+  b64 = b64.replace("+", "-");
+  b64 = b64.substring(0, 22);
   return b64;
 }
+
+function toBase64(b64Url: string): string {
+  b64Url = b64Url.replace("_", "/");
+  b64Url = b64Url.replace("+", "-");
+  b64Url += "==";
+  return b64Url;
+}
+
+const suid = encode();
+console.log(suid);
