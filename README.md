@@ -10,7 +10,7 @@ Can only be used with Deno for now.
 ### Usage - Deno
 
 ```typescript
-import { decode, encode } from "https://github.com/linhub15/short_uuid/mod.ts";
+import { decode, encode } from "https://raw.githubusercontent.com/linhub15/short-guid/main/mod.ts";
 
 console.log(encode()); // 00amyWGct0y_ze4lIsj2Mw
 console.log(decode(shortGuid)); // "c9a646d3-9c61-4cb7-bfcd-ee2522c8f633"
