@@ -102,15 +102,15 @@ function toByte(int32: bigint): DataView {
 }
 
 function urlify(b64: string): string {
-  b64 = b64.replace("/", "_");
-  b64 = b64.replace("+", "-");
+  b64 = b64.replaceAll("/", "_");
+  b64 = b64.replaceAll("+", "-");
   b64 = b64.substring(0, 22);
   return b64;
 }
 
 function unurlify(b64Url: string): string {
-  b64Url = b64Url.replace("_", "/");
-  b64Url = b64Url.replace("+", "-");
+  b64Url = b64Url.replaceAll("_", "/");
+  b64Url = b64Url.replaceAll("+", "-");
   b64Url += "==";
   return b64Url;
 }
