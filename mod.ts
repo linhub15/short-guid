@@ -1,17 +1,41 @@
 export function encode(guid?: string) {
   if (!guid) guid = crypto.randomUUID();
-  const byteArray = toByteArray(guid);
+  const byteArray = toByteArray(guid.trim());
 
   const intermediaryForBtoa = byteArray.reduce(
     (prev, cur) => prev + String.fromCharCode(cur),
     "",
   );
+
   const b64 = btoa(intermediaryForBtoa);
-  const suid = toBase64Url(b64);
+  const suid = urlify(b64);
   return suid;
 }
 
+export function decode(suid: string) {
+  const b64 = unurlify(suid.trim());
+  const s = atob(b64);
+  const len = s.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = s.charCodeAt(i);
+  }
+  return fromByteArray(bytes);
+}
+
+function fromByteArray(bytes: Uint8Array) {
+  const view = new DataView(bytes.buffer);
+  const a = view.getUint32(0, true).toString(16);
+  const b = view.getUint16(4, true).toString(16);
+  const c = view.getUint16(6, true).toString(16);
+  const d = view.getUint16(8).toString(16);
+  const e = view.getUint32(10).toString(16);
+  const f = view.getUint16(14).toString(16);
+  return `${a}-${b}-${c}-${d}-${e}${f}`;
+}
+
 function toByteArray(guid: string) {
+  // todo(hubert): make this better with DataViews
   const parts = guid.split("-");
   const a = toInt32(parts[0]);
   const b = toShort(parts[1]);
@@ -77,19 +101,16 @@ function toByte(int32: bigint): DataView {
   return view;
 }
 
-function toBase64Url(b64: string): string {
+function urlify(b64: string): string {
   b64 = b64.replace("/", "_");
   b64 = b64.replace("+", "-");
   b64 = b64.substring(0, 22);
   return b64;
 }
 
-function toBase64(b64Url: string): string {
+function unurlify(b64Url: string): string {
   b64Url = b64Url.replace("_", "/");
   b64Url = b64Url.replace("+", "-");
   b64Url += "==";
   return b64Url;
 }
-
-const suid = encode();
-console.log(suid);
