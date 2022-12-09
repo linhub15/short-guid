@@ -1,6 +1,6 @@
 export function encode(guid?: string) {
   if (!guid) guid = crypto.randomUUID();
-  const byteArray = toByteArray(guid.trim());
+  const byteArray = toByteArray(guid?.trim());
 
   const intermediaryForBtoa = byteArray.reduce(
     (prev, cur) => prev + String.fromCharCode(cur),

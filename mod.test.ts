@@ -9,6 +9,7 @@ Deno.test("guid encodes to suid", () => {
 
 Deno.test("guid encodes to suid", () => {
   const guid = "540c2d5f-a9ab-4414-bd36-9999f5388773";
+
   const suid = encode(guid);
   assertEquals(suid, "Xy0MVKupFES9NpmZ9TiHcw");
 });
