@@ -2,8 +2,8 @@
 
 C# Equivalent <https://github.com/csharpvitamins/CSharpVitamins.ShortGuid>
 
-Use this if you need to generate ShortGuids on the client and want to convert
-them back to `Guid` on the server using CSharpVitamins.ShortGuid.
+Use this if you need to generate ShortGuids in JS and want to convert
+them back to `Guid` using CSharpVitamins.ShortGuid.
 
 Can only be used with Deno for now.
 
